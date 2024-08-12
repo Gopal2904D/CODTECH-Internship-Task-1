@@ -1,0 +1,54 @@
+import re
+from typing import List
+
+def check_length(password: str) -> str:
+    min_length = 12
+    if len(password) < min_length:
+        return f"Password should be at least {min_length} characters long."
+    return ""
+
+def check_complexity(password: str) -> List[str]:
+    errors = []
+    if not re.search(r'[A-Z]', password):
+        errors.append("Include at least one uppercase letter.")
+    if not re.search(r'[a-z]', password):
+        errors.append("Include at least one lowercase letter.")
+    if not re.search(r'\d', password):
+        errors.append("Include at least one digit.")
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        errors.append("Include at least one special character.")
+    return errors
+
+def check_uniqueness(password: str, common_passwords: List[str]) -> str:
+    if password in common_passwords:
+        return "Password is too common. Choose a more unique password."
+    return ""
+
+def password_strength_checker(password: str, common_passwords: List[str]) -> str:
+    feedback = []
+    
+    # Check length
+    length_feedback = check_length(password)
+    if length_feedback:
+        feedback.append(length_feedback)
+    
+    # Check complexity
+    complexity_feedback = check_complexity(password)
+    if complexity_feedback:
+        feedback.extend(complexity_feedback)
+    
+    # Check uniqueness
+    uniqueness_feedback = check_uniqueness(password, common_passwords)
+    if uniqueness_feedback:
+        feedback.append(uniqueness_feedback)
+    
+    if not feedback:
+        return "Password is strong."
+    else:
+        return "Password is weak: " + " ".join(feedback)
+
+# Example usage
+if _name_ == "_main_":
+    common_passwords = ["password", "123456", "123456789", "qwerty", "abc123", "password1"]
+    password = input("Enter a password to check: ")
+    print(password_strength_checker(password, common_passwords))
